@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Editor</title>
+    <style>
+        #dropzone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function handleDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var fileType = file.type.split('/')[0];
+                
+                if (fileType === 'image') {
+                    var img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.style.width = '300px';
+                    img.style.height = 'auto';
+                    document.getElementById('dropzone').appendChild(img);
+                } else if (fileType === 'video') {
+                    var video = document.createElement('video');
+                    video.src = URL.createObjectURL(file);
+                    video.style.width = '300px';
+                    video.style.height = 'auto';
+                    video.controls = true;
+                    document.getElementById('dropzone').appendChild(video);
+                } else if (fileType === 'text') {
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        var text = document.createElement('p');
+                        text.textContent = event.target.result;
+                        document.getElementById('dropzone').appendChild(text);
+                    };
+                    reader.readAsText(file);
+                }
+            }
+        }
+        
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+    </script>
+</head>
+<body>
+    <h1>Blog Editor</h1>
+    <div id="dropzone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+        <p>Drag and drop text, images, or videos here</p>
+    </div>
+</body>
+</html>
